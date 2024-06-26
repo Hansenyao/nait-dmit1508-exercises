@@ -15,21 +15,21 @@ FROM Course
 GROUP BY Course.CourseName
 
 /* 3. How many payments where made for each payment type. Display the PaymentTypeDescription and the count. */
-SELECT PaymentType.PaymentTypeDescription, SUM(Payment.Amount) AS 'SUM'
+SELECT PaymentType.PaymentTypeDescription, Count(*) AS 'Count of Payments'
 FROM PaymentType
 	INNER JOIN Payment
 	ON PaymentType.PaymentTypeID = Payment.PaymentTypeID
-GROUP BY  PaymentType.PaymentTypeDescription
+GROUP BY PaymentType.PaymentTypeID, PaymentType.PaymentTypeDescription
 
 /* 4. Select the average Mark for each student. Display the Student Name and their average mark */
-SELECT Student.FirstName, Student.LastName, AVG(Registration.Mark) AS 'Average Mark'
+SELECT Student.FirstName + ' ' + Student.LastName AS 'Student Name', AVG(Registration.Mark) AS 'Average Mark'
 FROM Student
 	INNER JOIN Registration
 	ON Student.StudentID = Registration.StudentID
 GROUP BY Student.FirstName, Student.LastName
 
 /* 5. Select the same data as question 4 but only show the student names and averages that are > 80. */
-SELECT Student.FirstName, Student.LastName, AVG(Registration.Mark) AS 'Average Mark'
+SELECT Student.FirstName + ' ' + Student.LastName AS 'Student Name', AVG(Registration.Mark) AS 'Average Mark'
 FROM Student
 	INNER JOIN Registration
 	ON Student.StudentID = Registration.StudentID
@@ -41,7 +41,7 @@ SELECT PaymentType.PaymentTypeDescription, MAX(Payment.Amount) AS 'Max', MIN(Pay
 FROM Payment
 	INNER JOIN PaymentType
 	ON Payment.PaymentTypeID = PaymentType.PaymentTypeID
-GROUP BY PaymentType.PaymentTypeDescription
+GROUP BY PaymentType.PaymentTypeID, PaymentType.PaymentTypeDescription
 
 /* 7. How many students are there in each club? Show the clubName and the count. */
 SELECT Club.ClubName, COUNT(*) AS 'Students Number'
@@ -50,16 +50,14 @@ FROM Club
 	ON Club.ClubId = Activity.ClubId
 	INNER JOIN Student
 	ON Activity.StudentID = Student.StudentID
-GROUP BY Club.ClubName
+GROUP BY Club.ClubId, Club.ClubName
 
 /* 8. Which clubs have 3 or more students in them? Display the Club Names. */
 SELECT Club.ClubName, COUNT(*) AS 'Students Number'
-FROM Club
-	INNER JOIN Activity
-	ON Club.ClubId = Activity.ClubId
-	INNER JOIN Student
-	ON Activity.StudentID = Student.StudentID
-GROUP BY Club.ClubName
+FROM Activity
+	INNER JOIN Club
+	ON Activity.ClubId = Club.ClubId
+GROUP BY Club.ClubId, Club.ClubName
 HAVING COUNT(*) >= 3
 
 
