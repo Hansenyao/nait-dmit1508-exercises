@@ -1,5 +1,5 @@
-Use yourdatabasename
-Go
+USE IQSchool
+GO
 
 Drop Table If Exists Activity
 Drop Table If Exists Grade
